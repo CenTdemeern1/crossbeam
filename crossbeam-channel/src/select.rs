@@ -1203,8 +1203,11 @@ impl<'a> Select<'a> {
             biased,
         } = self;
         handles.clear();
-        // FIXME: Unsafe but stable version of [`Vec::recycle`]. Replace with [`Vec::recycle`] when it's stable, if possible.
-        let (ptr, length, capacity) = handles.into_raw_parts();
+        // FIXME: Unsafe but stable version of [`Vec::recycle`].
+        // Replace with [`Vec::into_raw_parts`] when MSRV hits 1.93.
+        // Replace with [`Vec::recycle`] when it's stable.
+        let mut handles = mem::ManuallyDrop::new(handles);
+        let (ptr, length, capacity) = (handles.as_mut_ptr(), handles.len(), handles.capacity());
         Select {
             // SAFETY: this vec has been cleared beforehand, so the lifetime has ended.
             handles: unsafe { Vec::from_raw_parts(ptr.cast(), length, capacity) },
