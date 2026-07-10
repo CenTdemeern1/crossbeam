@@ -1203,9 +1203,9 @@ impl<'a> Select<'a> {
             biased,
         } = self;
         handles.clear();
-        // FIXME: Unsafe but stable version of [`Vec::recycle`].
-        // Replace with [`Vec::into_raw_parts`] when MSRV hits 1.93.
-        // Replace with [`Vec::recycle`] when it's stable.
+        // FIXME: Unsafe but stable version of `Vec::recycle`.
+        // Replace with `Vec::into_raw_parts` when MSRV hits 1.93.
+        // Replace with `Vec::recycle` when it's stable.
         let mut handles = mem::ManuallyDrop::new(handles);
         let (ptr, length, capacity) = (handles.as_mut_ptr(), handles.len(), handles.capacity());
         debug_assert_eq!(length, 0);
