@@ -1208,6 +1208,7 @@ impl<'a> Select<'a> {
         // Replace with [`Vec::recycle`] when it's stable.
         let mut handles = mem::ManuallyDrop::new(handles);
         let (ptr, length, capacity) = (handles.as_mut_ptr(), handles.len(), handles.capacity());
+        debug_assert_eq!(length, 0);
         Select {
             // SAFETY: this vec has been cleared beforehand, so the lifetime has ended.
             handles: unsafe { Vec::from_raw_parts(ptr.cast(), length, capacity) },
